@@ -3,6 +3,8 @@ import Pokemon from "../models/pokemon";
 import "./pokemon-card.css";
 import formatDate from "../helpers/format-date";
 import formatType from "../helpers/format-type";
+import PokemonType from "./pokemon-type";
+import { useHistory } from "react-router-dom";
 
 type Props = {
   pokemon: Pokemon;
@@ -14,6 +16,7 @@ const PokemonCard: FunctionComponent<Props> = ({
   borderColor = "#009688",
 }) => {
   const [color, setColor] = useState<string>();
+  const history = useHistory();
 
   const showBorder = () => {
     setColor(borderColor);
@@ -23,11 +26,16 @@ const PokemonCard: FunctionComponent<Props> = ({
     setColor("#f5f5f5");
   };
 
+  const goToPokemon = (id:number) => {
+    history.push(`/pokemons/${id}`)
+  }
+
   return (
     <div
       className="col s6 m4"
       onMouseEnter={showBorder}
       onMouseLeave={hideBorder}
+      onClick={()=> goToPokemon(pokemon.id)}
     >
       <div className="card horizontal" style={{ borderColor: color }}>
         <div className="card-image">
@@ -39,10 +47,8 @@ const PokemonCard: FunctionComponent<Props> = ({
             <p>
               <small>{formatDate(pokemon.created)}</small>
             </p>
-            {pokemon.types.map((type) => (
-              <span key={type} className={formatType(type)}>
-                {type}
-              </span>
+            {pokemon.types.map((type, index) => (
+              <PokemonType key={index} type={type} />
             ))}
           </div>
         </div>
